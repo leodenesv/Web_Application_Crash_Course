@@ -10,22 +10,21 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('learning_logs:index'))
 
 def register(request):
-    """Register a new user."""
+    """Cadastra um novo usuário."""
     if request.method != 'POST':
-        # Display blank registration form.
+        # Exibe um formulário de cadastro em branco
         form = UserCreationForm()
     else:
-        # Process completed form.
+        # Processa o formulário preenchido
         form = UserCreationForm(data=request.POST)
 
         if form.is_valid():
             new_user = form.save()
-            # Log the user in and then redirect to home page.
-            authenticated_user = authenticate(username=new_user.username,
-                password=request.POST['password1'])
-            login(request, authenticated_user)
+            
+            # FORMATO MODERNO: Loga o usuário criado diretamente e de forma segura
+            login(request, new_user)
+            
             return HttpResponseRedirect(reverse('learning_logs:index'))
 
     context = {'form': form}
     return render(request, 'users/register.html', context)
-# Create your views here.

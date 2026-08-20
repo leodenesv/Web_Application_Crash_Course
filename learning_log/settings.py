@@ -163,3 +163,6 @@ if os.environ.get('RENDER') or os.environ.get('HEROKU_APP_NAME') or os.getcwd() 
     
     # Segurança de cabeçalho obrigatória para servidores em nuvem
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+LOGIN_REDIRECT_URL = 'learning_logs:index'
+LOGOUT_REDIRECT_URL = 'learning_logs:index'
