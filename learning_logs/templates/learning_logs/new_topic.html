@@ -2,20 +2,43 @@
 {% load django_bootstrap5 %}
 
 {% block header %}
-  <h2>Add a new topic:</h2>
+  <!-- Cabeçalho moderno com estilo sutil e limpo -->
+  <div class="d-flex align-items-center pb-2 mb-4 border-bottom">
+    <h1 class="h2 text-dark fw-bold mb-0">Add a New Topic</h1>
+  </div>
 {% endblock header %}
 
 {% block content %}
+  <div class="row">
+    <!-- Centraliza o formulário e limita a largura para melhor leitura em telas grandes -->
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+          
+          <p class="text-muted mb-4">Introduce a new subject or area of study that you want to keep track of.</p>
 
-  <form action="{% url 'learning_logs:new_topic' %}" method='post' class="form">
-    
-    {% csrf_token %}
-    {% bootstrap_form form %}
+          <form action="{% url 'learning_logs:new_topic' %}" method="post" class="form">
+            {% csrf_token %}
+            
+            <!-- Renderiza o formulário com o padrão de Grid estruturado do Bootstrap 5 -->
+            <div class="mb-4">
+              {% bootstrap_form form layout='floating' %}
+            </div>
 
-    {% buttons %}
-      <button name="submit" class="btn btn-primary">Add topic</button>
-    {% endbuttons %}
+            <!-- Grupo de botões modernos (Salvar e Cancelar) -->
+            <div class="d-flex align-items-center gap-2 pt-2">
+              <button name="submit" class="btn btn-primary px-4 py-2 rounded-2 fw-semibold shadow-sm">
+                Add Topic
+              </button>
+              <a href="{% url 'learning_logs:topics' %}" class="btn btn-outline-secondary px-4 py-2 rounded-2">
+                Cancel
+              </a>
+            </div>
 
-  </form>
+          </form>
 
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}
