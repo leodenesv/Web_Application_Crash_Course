@@ -4,12 +4,10 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Topic(models.Model):
-    """A topic the user is learning about"""
+    """Um assunto sobre o qual o usuário está aprendendo."""
     text = models.CharField(max_length=200)
     date_added = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        """Return a string representation of the model."""
-        return self.text
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Entry(models.Model):
     """Something specefic learned about a topic"""

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third party apps
+    'django_bootstrap5',
 
     # My apps
     'learning_logs',
@@ -133,3 +138,34 @@ MAILERS = {
 # My settings
 
 LOGIN_URL = '/users/login'
+
+# Settings for django-bootstrap3
+BOOTSTRAP5 = {
+    'error_css_class': 'django-bootstrap5-error',
+    'required_css_class': 'django-bootstrap5-required',
+    'set_placeholder': True,
+}
+
+if os.environ.get('HEROKU_APP_NAME') or os.getcwd() == '/app':
+    
+    # Substitui a configuração antiga do banco de dados pelo formato moderno
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+        ssl_require=True
+    )
+    
+    # Mantém a segurança de protocolo HTTPS exigida pelo Heroku
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
+    # Permite que o seu site responda pelo endereço do Heroku na web
+    ALLOWED_HOSTS = ['*']
+    
+    # Configuração moderna de Arquivos Estáticos com WhiteNoise
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+    ]
+    
+    # Cria a pasta temporária de arquivos se ela não existir
+    os.makedirs(STATIC_ROOT, exist_ok=True)

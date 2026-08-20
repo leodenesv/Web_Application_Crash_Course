@@ -1,15 +1,54 @@
-<p>
-    <a href="{% url 'learning_logs:index' %}">Learning Log</a> -
-    <a href="{% url 'learning_logs:topics' %}">Topics</a> -
-    {% if user.is_authenticated %}
-        Hello, {{ user.userneme }}.
-        <a href="{% url 'users:logout' %}">log out</a>
-    {% else %}
-        <a href="{% url 'users:register' %}">register</a> -
-        <a href="{% url 'users:login' %}"> log in</a>
-    {% endif %}
-</p>
+{% load django_bootstrap5 %}
 
-{% block content %}{% endblock content %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Learning Log</title>
+    
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+  </head>
 
+  <body>
+
+    <!-- Barra de Navegação Superior (Navbar) -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'learning_logs:index' %}">Learning Log</a>
+        
+        <div class="navbar-nav me-auto">
+          <a class="nav-link" href="{% url 'learning_logs:topics' %}">Topics</a>
+        </div>
+
+        <div class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+            <span class="navbar-text me-2">Hello, {{ user.username }}.</span>
+            <form action="{% url 'users:logout' %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-link nav-link" style="display:inline; padding:0;">Log out</button>
+            </form>
+          {% else %}
+            <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+            <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <!-- Bloco de Conteúdo Principal -->
+    <main class="container">
+      <header class="pb-3 mb-4 border-bottom">
+        {% block header %}{% endblock header %}
+      </header>
+
+      <div class="mb-4">
+        {% block content %}{% endblock content %}
+      </div>
+    </main> <!-- /container -->
+
+  </body>
+</html>
 
