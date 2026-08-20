@@ -146,26 +146,23 @@ BOOTSTRAP5 = {
     'set_placeholder': True,
 }
 
-if os.environ.get('HEROKU_APP_NAME') or os.getcwd() == '/app':
+if os.environ.get('RENDER') or os.environ.get('HEROKU_APP_NAME') or os.getcwd() == '/app':
     
-    # Substitui a configuração antiga do banco de dados pelo formato moderno
+    # Ativa a leitura do banco de dados dinâmico da nuvem
     DATABASES['default'] = dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
         ssl_require=True
     )
     
-    # Mantém a segurança de protocolo HTTPS exigida pelo Heroku
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    
-    # Permite que o seu site responda pelo endereço do Heroku na web
-    ALLOWED_HOSTS = ['*']
-    
-    # Configuração moderna de Arquivos Estáticos com WhiteNoise
+    # Configuração obrigatória de Arquivos Estáticos com WhiteNoise
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
     ]
     
-    # Cria a pasta temporária de arquivos se ela não existir
+    # Cria a pasta de estilos automaticamente se não existir
     os.makedirs(STATIC_ROOT, exist_ok=True)
+    
+    # Segurança de cabeçalho obrigatória para servidores em nuvem
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
