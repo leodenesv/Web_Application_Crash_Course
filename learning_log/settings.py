@@ -148,18 +148,17 @@ BOOTSTRAP5 = {
 
 if os.environ.get('RENDER') or os.environ.get('HEROKU_APP_NAME') or os.getcwd() == '/app':
     
-    # Ativa a leitura do banco de dados dinâmico da nuvem
-    DATABASES['default'] = dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True,
-        ssl_require=True
-    )
+    # Se houver um banco na nuvem, ele usa. Se não, mantém o SQLite padrão com segurança
+    if os.environ.get('DATABASE_URL'):
+        DATABASES['default'] = dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True
+        )
     
-    # Configuração obrigatória de Arquivos Estáticos com WhiteNoise
+    # Configuração de Arquivos Estáticos com WhiteNoise
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static'),
-    ]
+    STATICFILES_DIRS = []  # Deixamos vazio para evitar o aviso (staticfiles.W004)
     
     # Cria a pasta de estilos automaticamente se não existir
     os.makedirs(STATIC_ROOT, exist_ok=True)
