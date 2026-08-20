@@ -1,10 +1,31 @@
 from django.http import HttpResponseRedirect
-from django.urls import reverse  # Corrigido: 'core.urlresolvers' não existe mais
-from django.contrib.auth import logout
+from django.urls import reverse  
+from django.contrib.auth import logout, login
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
 
 def logout_view(request):
     """Efetua o logout do usuário."""
     logout(request)
     return HttpResponseRedirect(reverse('learning_logs:index'))
 
+def register(request):
+    """Register a new user."""
+    if request.method != 'POST':
+        # Display blank registration form.
+        form = UserCreationForm()
+    else:
+        # Process completed form.
+        form = UserCreationForm(data=request.POST)
+
+        if form.is_valid():
+            new_user = form.save()
+            # Log the user in and then redirect to home page.
+            authenticated_user = authenticate(username=new_user.username,
+                password=request.POST['password1'])
+            login(request, authenticated_user)
+            return HttpResponseRedirect(reverse('learning_logs:index'))
+
+    context = {'form': form}
+    return render(request, 'users/register.html', context)
 # Create your views here.
