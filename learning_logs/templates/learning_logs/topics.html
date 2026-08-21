@@ -1,23 +1,41 @@
 {% extends "learning_logs/base.html" %}
 
 {% block header %}
-    <h1>Topics</h1>
+  <div class="ll-page-header pb-3 mb-4 border-bottom">
+    <h1 class="h2">Your topics</h1>
+  </div>
 {% endblock header %}
 
 {% block content %}
 
-    <ul>
-        {% for topic in topics %}
-            <li>
-                <h3>
-                    <a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a>
-                </h3>
-            </li>
-        {% empty %}
-            <li>No topics have been added yet.</li>
-        {% endfor %}
-    </ul>
+  {% if topics %}
+    <div class="row g-3">
+      {% for topic in topics %}
+        <div class="col-sm-6 col-lg-4">
+          <a href="{% url 'learning_logs:topic' topic.id %}" class="ll-card ll-topic-card text-decoration-none">
+            <h3>{{ topic }}</h3>
+            <div class="ll-meta">
+              Added {{ topic.date_added|date:'M d, Y' }}
+              &middot;
+              <span class="ll-badge-count">{{ topic.entry_set.count }} entr{{ topic.entry_set.count|pluralize:"y,ies" }}</span>
+            </div>
+          </a>
+        </div>
+      {% endfor %}
 
-    <h3><a href="{% url 'learning_logs:new_topic' %}"> Add a new topic:</a></h3>
+      <div class="col-sm-6 col-lg-4">
+        <a href="{% url 'learning_logs:new_topic' %}" class="ll-add-tile h-100">
+          <span class="fs-4">+</span> Add a new topic
+        </a>
+      </div>
+    </div>
+  {% else %}
+    <div class="ll-empty-state">
+      <p class="mb-3">You haven't added any topics yet.</p>
+      <a href="{% url 'learning_logs:new_topic' %}" class="btn btn-primary px-4 py-2 fw-semibold rounded-2 shadow-sm">
+        Add your first topic
+      </a>
+    </div>
+  {% endif %}
 
 {% endblock content %}

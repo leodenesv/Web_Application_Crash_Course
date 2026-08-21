@@ -1,15 +1,29 @@
 {% extends "learning_logs/base.html" %}
 {% load django_bootstrap5 %}
 
+{% block header %}
+  <div class="ll-page-header pb-3 mb-4 border-bottom justify-content-center">
+    <h2 class="h2">Create your account</h2>
+  </div>
+{% endblock header %}
+
 {% block content %}
+  <div class="ll-form-card ll-card p-4 p-md-5 mx-auto">
 
-  <form method="post" action="{% url 'users:register' %}" class="form">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    
-    {% bootstrap_button "Register" button_type="submit" button_class="btn-primary" %}
-    
-    <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
-  </form>
+    <form method="post" action="{% url 'users:register' %}">
+      {% csrf_token %}
+      {% bootstrap_form form layout='floating' %}
 
+      <button type="submit" class="btn btn-primary w-100 py-2 rounded-2 fw-semibold shadow-sm mt-2">
+        Register
+      </button>
+
+      <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
+    </form>
+
+    <p class="text-muted text-center mt-4 mb-0">
+      Already have an account?
+      <a href="{% url 'users:login' %}" class="link-ll fw-semibold">Log in</a>
+    </p>
+  </div>
 {% endblock content %}

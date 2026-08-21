@@ -1,31 +1,36 @@
 {% extends "learning_logs/base.html" %}
 
 {% block header %}
-  <h2>{{ topic }}</h2>
+  <div class="ll-page-header pb-3 mb-4 border-bottom">
+    <div>
+      <a href="{% url 'learning_logs:topics' %}" class="link-ll small">&larr; All topics</a>
+      <h2 class="mt-1">{{ topic }}</h2>
+    </div>
+    <a href="{% url 'learning_logs:new_entry' topic.id %}" class="btn btn-primary px-4 py-2 fw-semibold rounded-2 shadow-sm">
+      + Add new entry
+    </a>
+  </div>
 {% endblock header %}
 
 {% block content %}
-  <p>
-    <a href="{% url 'learning_logs:new_entry' topic.id %}">add new entry</a>
-  </p>
-  <ul>
 
-  {% for entry in entries %}
-    <div class="panel panel-default">
-      <div> class="panel-heading">
-        <h3>
-          {{ entry.date_added|date:'M d, Y H:i'}}
-          <small>
-            <a href="{% url 'learning_logs:edit_entry' entry.id %}">edit entry</a>
-          </small>
-        </h3>
+  {% if entries %}
+    {% for entry in entries %}
+      <div class="ll-entry">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <span class="ll-entry-date">{{ entry.date_added|date:'M d, Y H:i' }}</span>
+          <a href="{% url 'learning_logs:edit_entry' entry.id %}" class="link-ll small fw-semibold">Edit entry</a>
+        </div>
+        <div class="ll-entry-text">{{ entry.text|linebreaks }}</div>
       </div>
-      <div class="panel-body">
-        {{ entry.text|linebreaks }}
-      </div>
-    </div> <!-- panel -->
-    {% empty %}
-      There are no entries for this topic yet.
     {% endfor %}
+  {% else %}
+    <div class="ll-empty-state">
+      <p class="mb-3">There are no entries for this topic yet.</p>
+      <a href="{% url 'learning_logs:new_entry' topic.id %}" class="btn btn-primary px-4 py-2 fw-semibold rounded-2 shadow-sm">
+        Add the first entry
+      </a>
+    </div>
+  {% endif %}
 
 {% endblock content %}

@@ -1,54 +1,78 @@
 {% load django_bootstrap5 %}
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <title>Learning Log</title>
-    
+
+    <title>{% block title %}Learning Log{% endblock title %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     {% bootstrap_css %}
+    <link rel="stylesheet" href="{% static 'learning_logs/css/style.css' %}">
+
     {% bootstrap_javascript %}
   </head>
 
   <body>
 
-    <!-- Barra de Navegação Superior (Navbar) -->
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'learning_logs:index' %}">Learning Log</a>
-        
-        <div class="navbar-nav me-auto">
-          <a class="nav-link" href="{% url 'learning_logs:topics' %}">Topics</a>
-        </div>
+    <nav class="navbar navbar-expand-md navbar-dark ll-navbar mb-4 sticky-top">
+      <div class="container-fluid px-3 px-md-4">
+        <a class="navbar-brand" href="{% url 'learning_logs:index' %}">
+          <span class="ll-logo-dot"></span> Learning Log
+        </a>
 
-        <div class="navbar-nav ms-auto">
-          {% if user.is_authenticated %}
-            <span class="navbar-text me-2">Hello, {{ user.username }}.</span>
-            <form action="{% url 'users:logout' %}" method="post" style="display:inline;">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-link nav-link" style="display:inline; padding:0;">Log out</button>
-            </form>
-          {% else %}
-            <a class="nav-link" href="{% url 'users:register' %}">Register</a>
-            <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
-          {% endif %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#llNav" aria-controls="llNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="llNav">
+          <div class="navbar-nav me-auto mt-2 mt-md-0">
+            {% if user.is_authenticated %}
+              <a class="nav-link" href="{% url 'learning_logs:topics' %}">Topics</a>
+            {% endif %}
+          </div>
+
+          <div class="navbar-nav ms-auto align-items-md-center mt-2 mt-md-0">
+            {% if user.is_authenticated %}
+              <span class="navbar-text me-md-3">Hi, {{ user.username }}</span>
+              <form action="{% url 'users:logout' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link nav-link btn-logout p-0 p-md-2">Log out</button>
+              </form>
+            {% else %}
+              <a class="nav-link" href="{% url 'users:register' %}">Register</a>
+              <a class="nav-link" href="{% url 'users:login' %}">Log in</a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </nav>
 
-    <!-- Bloco de Conteúdo Principal -->
-    <main class="container">
-      <header class="pb-3 mb-4 border-bottom">
-        {% block header %}{% endblock header %}
-      </header>
+    <main class="container pb-5">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% block header %}{% endblock header %}
 
       <div class="mb-4">
         {% block content %}{% endblock content %}
       </div>
-    </main> <!-- /container -->
+    </main>
+
+    <footer class="ll-footer">
+      Learning Log &mdash; keep track of what you're learning, one topic at a time.
+    </footer>
 
   </body>
 </html>
-

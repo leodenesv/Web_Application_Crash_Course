@@ -1,16 +1,50 @@
 {% extends "learning_logs/base.html" %}
 
 {% block header %}
-    <div class='jumbotron'>
-        <h1>Track your learning.</h1>
-    </div>
+  <div class="ll-hero">
+    <span class="ll-eyebrow">Personal knowledge tracker</span>
+    <h1>Track your learning.</h1>
+    <p class="lead">
+      Keep a running log of everything you're studying. Create a topic for
+      each subject, and add entries whenever you learn something new.
+    </p>
+
+    {% if not user.is_authenticated %}
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <a href="{% url 'users:register' %}" class="btn btn-primary px-4 py-2 fw-semibold rounded-2 shadow-sm">
+          Create your account
+        </a>
+        <a href="{% url 'users:login' %}" class="btn btn-outline-secondary px-4 py-2 rounded-2">
+          Log in
+        </a>
+      </div>
+    {% else %}
+      <a href="{% url 'learning_logs:topics' %}" class="btn btn-primary px-4 py-2 fw-semibold rounded-2 shadow-sm mt-3">
+        Go to your topics
+      </a>
+    {% endif %}
+  </div>
 {% endblock header %}
 
 {% block content %}
-    <h2>
-        <a href="{% url 'users:register' %}">Register an account</a> to make your own Learning Log,
-        and list the topics you're learning about. 
-    <h2>
-        Whenever you learn something new about a topic, make an entry summarizing what you've learned.
-    </h2>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="ll-card p-4 h-100">
+        <h3 class="h5 fw-bold">1. Add a topic</h3>
+        <p class="text-muted mb-0">Start with any subject you're studying — a language, a skill, a book.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="ll-card p-4 h-100">
+        <h3 class="h5 fw-bold">2. Log entries</h3>
+        <p class="text-muted mb-0">Whenever you learn something new about a topic, write it down.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="ll-card p-4 h-100">
+        <h3 class="h5 fw-bold">3. Watch it grow</h3>
+        <p class="text-muted mb-0">Come back anytime to review your progress and revisit old notes.</p>
+      </div>
+    </div>
+  </div>
 {% endblock content %}

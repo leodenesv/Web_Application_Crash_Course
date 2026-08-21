@@ -1,15 +1,35 @@
 {% extends "learning_logs/base.html" %}
+{% load django_bootstrap5 %}
+
+{% block header %}
+  <div class="ll-page-header pb-3 mb-4 border-bottom justify-content-center">
+    <h2 class="h2">Log in to your account</h2>
+  </div>
+{% endblock header %}
 
 {% block content %}
+  <div class="ll-form-card ll-card p-4 p-md-5 mx-auto">
 
     {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
+      <div class="alert alert-danger">
+        Your username and password didn't match. Please try again.
+      </div>
     {% endif %}
 
     <form method="post" action="{% url 'users:login' %}">
-        {% csrf_token %}
-        {{ form.as_p}}
-        <button name="submit">Log in</button>
-        <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
-        </form>
+      {% csrf_token %}
+      {% bootstrap_form form layout='floating' %}
+
+      <button name="submit" class="btn btn-primary w-100 py-2 rounded-2 fw-semibold shadow-sm mt-2">
+        Log in
+      </button>
+
+      <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
+    </form>
+
+    <p class="text-muted text-center mt-4 mb-0">
+      No account yet?
+      <a href="{% url 'users:register' %}" class="link-ll fw-semibold">Register here</a>
+    </p>
+  </div>
 {% endblock content %}
